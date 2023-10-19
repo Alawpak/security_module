@@ -36,13 +36,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
         now = timezone.now()
 
-        if self.fecha_inicio and now < self.fecha_inicio:
-            raise ValidationError('La cuenta aún no está activa.')
+        if (self.is_active):
+            print("ESTOY ACTIVO")
+            if self.fecha_inicio and now < self.fecha_inicio:
+                raise ValidationError('La cuenta aún no está activa.')
 
-        if self.fecha_fin and now > self.fecha_fin:
-            raise ValidationError('La cuenta ha expirado.')
+            if self.fecha_fin and now > self.fecha_fin:
+                raise ValidationError('La cuenta ha expirado.')
 
-        return True
+            return True
+
+        return False
 
     objects = CustomUserManager()
 
