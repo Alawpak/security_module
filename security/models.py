@@ -28,14 +28,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     apellido = models.CharField(max_length=30, blank=True, null=True)
     fecha_inicio = models.DateTimeField(blank=True, null=True)
     fecha_fin = models.DateTimeField(blank=True, null=True)
-    estado_cuenta = models.BooleanField(default=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(
+        default=False, verbose_name="Cuenta activa")
     is_staff = models.BooleanField(default=False)
-
-    # Campos que estaban comentados
-    # email = models.EmailField(unique=True)
-    # first_name = models.CharField(max_length=30)
-    # last_name = models.CharField(max_length=30)
 
     def is_login_allowed(self):
 
