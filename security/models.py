@@ -42,11 +42,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         now = timezone.now()
 
         if self.fecha_inicio and now < self.fecha_inicio:
-            print("semen")
             raise ValidationError('La cuenta aún no está activa.')
 
         if self.fecha_fin and now > self.fecha_fin:
-            print("HOLAAAA")
             raise ValidationError('La cuenta ha expirado.')
 
         return True
