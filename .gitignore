@@ -1,0 +1,16 @@
+# Archivos y carpetas específicos de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos específicos de Django
+*.sqlite3
+*.pyc
+
+# Otros archivos y carpetas comunes
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+db.sqlite3
