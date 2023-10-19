@@ -39,9 +39,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         if (self.is_active):
             print("ESTOY ACTIVO")
             if self.fecha_inicio and now < self.fecha_inicio:
+                self.is_active = False
+                self.save()
                 raise ValidationError('La cuenta aún no está activa.')
 
             if self.fecha_fin and now > self.fecha_fin:
+                self.is_active = False
+                self.save()
                 raise ValidationError('La cuenta ha expirado.')
 
             return True
