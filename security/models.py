@@ -26,7 +26,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     login_usuario = models.CharField(
         max_length=255, unique=True, blank=True, null=True)
     nombre = models.ForeignKey(
-        'Persona', on_delete=models.PROTECT, blank=True, null=True)
+        'Persona', on_delete=models.PROTECT, blank=False, null=True, )
     fecha_inicio = models.DateTimeField(blank=True, null=True)
     fecha_fin = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(
