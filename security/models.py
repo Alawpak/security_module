@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 
 class CustomUserManager(BaseUserManager):
@@ -27,7 +28,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         max_length=255, unique=True, blank=True, null=True)
     nombre = models.ForeignKey(
         'Persona', on_delete=models.PROTECT, blank=False, null=True, )
-    fecha_inicio = models.DateTimeField(blank=True, null=True)
+    fecha_inicio = models.DateTimeField(
+        blank=True, null=True, default=timezone.now)
     fecha_fin = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(
         default=False, verbose_name="Cuenta activa")
