@@ -25,31 +25,35 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     login_usuario = models.CharField(
-        max_length=255, unique=True, blank=True, null=True)
+        max_length=255, unique=True, blank=False, null=True)
     nombre = models.ForeignKey(
         'Persona', on_delete=models.PROTECT, blank=False, null=True, )
     fecha_inicio = models.DateTimeField(
-        blank=True, null=True, default=timezone.now)
-    fecha_fin = models.DateTimeField(blank=True, null=True)
+        blank=False, null=True, default=timezone.now)
+    fecha_fin = models.DateTimeField(blank=False, null=True)
     is_active = models.BooleanField(
-        default=False, verbose_name="Cuenta activa")
-    is_staff = models.BooleanField(default=False)
+        default=True, verbose_name="Cuenta activa")
+    is_staff = models.BooleanField(default=True)
 
     def is_login_allowed(self):
 
         now = timezone.now()
+        currentDate = timezone.localtime(timezone.now()).date()
 
         if (self.is_active):
-            if self.fecha_inicio and now < self.fecha_inicio:
-                self.is_active = False
-                self.save()
-                raise ValidationError('La cuenta aún no está activa.')
+            if self.fecha_inicio and currentDate > self.fecha_inicio.date():
+                raise ValidationError(
+                    'La fecha de inicio no puede ser inferior a la del servidor')
+
+            if self.fecha_inicio and self.fecha_fin and self.fecha_inicio > self.fecha_fin:
+                raise ValidationError(
+                    'La fecha fin no puede ser menor a la fecha de inicio')
 
             if self.fecha_fin and now > self.fecha_fin:
                 self.is_active = False
                 self.save()
-                raise ValidationError('La cuenta ha expirado.')
-
+                raise ValidationError(
+                    'La cuenta ha expirado')
             return True
 
         return False

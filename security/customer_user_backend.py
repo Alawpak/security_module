@@ -1,5 +1,4 @@
 from django.contrib.auth.backends import ModelBackend
-# Asegúrate de importar correctamente tu modelo de usuario personalizado
 from .models import CustomUser
 
 

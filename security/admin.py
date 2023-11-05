@@ -6,18 +6,18 @@ from .models import CustomUser
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = ['login_usuario', 'nombre',
-                    'fecha_inicio', 'fecha_fin', 'is_staff', 'is_active']
+                    'fecha_inicio', 'fecha_fin', 'is_active']
     fieldsets = (
         (None, {'fields': ('login_usuario', 'password')}),
         ('Información personal', {'fields': ('nombre', )}),
         ('Fecha inicio de sesion', {'fields': ('fecha_inicio', 'fecha_fin')}),
-        ('Permisos', {'fields': ('is_active', 'is_staff',
+        ('Permisos', {'fields': ('is_active',
          'is_superuser', 'groups', 'user_permissions')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('nombre', 'login_usuario', 'fecha_inicio', 'fecha_fin', 'password1', 'password2', 'is_active', 'is_staff'),
+            'fields': ('nombre', 'login_usuario', 'fecha_inicio', 'fecha_fin', 'password1', 'password2', 'is_active'),
         }),
     )
     search_fields = ('login_usuario', 'nombre')
