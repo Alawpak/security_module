@@ -25,25 +25,28 @@ def login_view(request):
                 request, login_usuario=login_usuario, password=password)
             try:
                 user_id = CustomUser.objects.get(login_usuario=login_usuario)
-                userA = CustomUser.objects.get(id=user_id.id)
+                self_user = CustomUser.objects.get(id=user_id.id)
 
+                currentDate = timezone.localtime(timezone.now()).date()
                 now = timezone.now()
-                if userA.fecha_fin is not None and now > userA.fecha_fin:
-                    userA.is_active = False
-                else:
-                    userA.is_active = True
-                userA.save()
 
-                if userA.is_active:
-                    if user is not None:
+                if self_user.is_active and user:
+
+                    if self_user.fecha_fin and now > self_user.fecha_fin:
+                        self_user.is_active = False
+                        self_user.save()
+                        messages.error(request,
+                                       'Su cuenta ha expirado')
+                    elif self_user.fecha_inicio and self_user.fecha_inicio > now:
+                        messages.error(
+                            request, 'La fecha de inicio de sesión aún no llega. Sea paciente')
+                    else:
                         login(request, user)
                         return redirect('/admin')
-                    else:
-                        messages.error(
-                            request, 'Credenciales de inicio de sesión incorrectas.')
                 else:
                     messages.error(
                         request, 'Su cuenta está desactivada. Póngase en contacto con el administrador.')
+
             except ObjectDoesNotExist:
                 messages.error(
                     request, 'El usuario no existe en la base de datos')
