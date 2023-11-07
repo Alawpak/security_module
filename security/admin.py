@@ -3,6 +3,22 @@ from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.contrib.auth.models import Group, User
+
+
+class CustomAdminSite(admin.AdminSite):
+
+    def index(self, request, extra_context=None):
+        # Obtener el nombre del usuario actual o mostrar un mensaje predeterminado si no está autenticado
+        user = request.user
+        if user.is_authenticated:
+            self.site_header = f'Bienvenido, {user.nombre}'
+        return super().index(request, extra_context)
+
+
+admin_site = CustomAdminSite(name='customadmin')
+admin_site.register(Group)
+admin_site.register(User)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -57,6 +73,8 @@ class CustomUserAdmin(UserAdmin):
                 return super().response_change(request, obj)
         return super().response_change(request, obj)
 
+
+admin.site = admin_site
 
 # Registra el modelo de usuario personalizado con el administrador
 admin.site.register(CustomUser, CustomUserAdmin)

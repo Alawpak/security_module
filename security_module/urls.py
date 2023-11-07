@@ -17,7 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+
+
+# default: "Django Administration"
+admin.site.site_header = 'Sistema CRUD usuarios'
+# default: "Site administration"
+admin.site.index_title = 'Modulos mantenimiento'
