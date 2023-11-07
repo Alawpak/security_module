@@ -35,27 +35,28 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         default=True, verbose_name="Cuenta activa")
     is_staff = models.BooleanField(default=True)
 
-    def is_login_allowed(self):
+    def is_active_fun(self):
+        if (self.is_active):
+            return True
+        return False
 
+    def is_expirate_date(self):
         now = timezone.now()
+
+        if self.fecha_fin and now > self.fecha_fin:
+            return True
+        return False
+
+    def is_upcoming_date(self):
         currentDate = timezone.localtime(timezone.now()).date()
 
-        if (self.is_active):
-            if self.fecha_inicio and currentDate > self.fecha_inicio.date():
-                raise ValidationError(
-                    'La fecha de inicio no puede ser inferior a la del servidor')
-
-            if self.fecha_inicio and self.fecha_fin and self.fecha_inicio > self.fecha_fin:
-                raise ValidationError(
-                    'La fecha fin no puede ser menor a la fecha de inicio')
-
-            if self.fecha_fin and now > self.fecha_fin:
-                self.is_active = False
-                self.save()
-                raise ValidationError(
-                    'La cuenta ha expirado')
+        if self.fecha_inicio and self.fecha_inicio.date().day < currentDate.day:
             return True
+        return False
 
+    def is_start_date_after_end(self):
+        if self.fecha_inicio and self.fecha_fin and self.fecha_inicio > self.fecha_fin:
+            return True
         return False
 
     objects = CustomUserManager()
@@ -64,9 +65,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # REQUIRED_FIELDS = ['nombre']
 
     def save(self, *args, **kwargs):
-        # Agrega validaciones adicionales aquí antes de guardar
-        self.is_login_allowed()
-        super().save(*args, **kwargs)
+        is_upcoming = self.is_upcoming_date()
+        is_start_date_after_end = self.is_start_date_after_end()
+        # is_start_date_after_end it works
+        if is_upcoming or is_start_date_after_end:
+            pass
+        else:
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return self.login_usuario
