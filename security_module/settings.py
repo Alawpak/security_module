@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'security.middleware.CheckAccountExpirationMiddleware',
+    # 'security.middleware.CheckAccountExpirationMiddleware',
 
 ]
 
@@ -84,7 +84,7 @@ DATABASES = {
         "USER": "root",
         "PASSWORD": "",
         "HOST": "localhost",
-        "PORT": "3306"
+        "PORT": "3307"
     }
 }
 
@@ -132,5 +132,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'security.CustomUser'
 
-AUTHENTICATION_BACKENDS = [
-    'security.customer_user_backend.CustomUserBackend', 'django.contrib.auth.backends.ModelBackend',]
+# AUTHENTICATION_BACKENDS = [
+#     'security.customer_user_backend.CustomUserBackend', 'django.contrib.auth.backends.ModelBackend',]
+
+LOGIN_REDIRECT_URL = '/admin/'
