@@ -16,11 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from security.views import login_view
+from django.shortcuts import redirect
+from django.views.generic.base import RedirectView
+from security.views import login_view, change_password
 
 urlpatterns = [
     path('admin/', admin.site.urls, name="admin"),
-    path('test/', login_view, name='test'),
+    path('change_password/', change_password, name='change_password'),
+    path('', login_view, name='test'),
 ]
 
 

@@ -4,6 +4,7 @@ from .models import CustomUser
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import Group, User
+from django.urls import reverse
 
 
 class CustomAdminSite(admin.AdminSite):
@@ -14,6 +15,10 @@ class CustomAdminSite(admin.AdminSite):
         if user.is_authenticated:
             self.site_header = f'Bienvenido, {user.nombre}'
         return super().index(request, extra_context)
+
+    def password_change(self, request):
+        change_password_url = reverse('change_password')
+        return HttpResponseRedirect(change_password_url)
 
 
 admin_site = CustomAdminSite(name='customadmin')

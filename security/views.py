@@ -2,12 +2,14 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
-from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .models import CustomUser
-from .forms import LoginForm
+from django.contrib.auth import update_session_auth_hash
+from .forms import CustomPasswordChangeForm, LoginForm
 
 
 def login_view(request):
@@ -36,7 +38,7 @@ def login_view(request):
                         self_user.is_active = False
                         self_user.save()
                         messages.error(request,
-                                       'Su cuenta ha expirado')
+                                       'Su cuenta ha expirado. Fecha fin ya pasó')
                     elif self_user.fecha_inicio and self_user.fecha_inicio > now:
                         messages.error(
                             request, 'La fecha de inicio de sesión aún no llega. Sea paciente')
@@ -45,11 +47,25 @@ def login_view(request):
                         return redirect('/admin')
                 else:
                     messages.error(
-                        request, 'Su cuenta está desactivada. Póngase en contacto con el administrador.')
+                        request, 'Su cuenta está desactivada')
 
             except ObjectDoesNotExist:
                 messages.error(
-                    request, 'El usuario no existe en la base de datos')
+                    request, 'El usuario no existe')
 
     context = {**data}
     return render(request, 'admin/login.html', context)
+
+
+@login_required
+def change_password(request):
+    username = request.user.login_usuario
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            return redirect('/admin')
+    else:
+        form = CustomPasswordChangeForm(request.user)
+    return render(request, 'admin/change_password.html', {'form': form, 'username': username})
