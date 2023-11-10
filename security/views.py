@@ -26,11 +26,11 @@ def login_view(request):
             try:
                 user_id = CustomUser.objects.get(login_usuario=login_usuario)
                 self_user = CustomUser.objects.get(id=user_id.id)
-
                 now = timezone.now()
+
+                # if it's authenticated
                 if user:
                     if self_user.is_active:
-
                         if self_user.fecha_fin and now > self_user.fecha_fin:
                             self_user.is_active = False
                             self_user.save()
@@ -45,6 +45,9 @@ def login_view(request):
                     else:
                         messages.error(
                             request, 'Su cuenta está desactivada')
+                elif self_user and not self_user.is_active:
+                    messages.error(
+                        request, 'Su cuenta está desactivada. Ponerse en contacto con el admin')
                 else:
                     messages.error(
                         request, 'Contraseña incorrecta')
