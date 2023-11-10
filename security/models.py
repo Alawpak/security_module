@@ -68,10 +68,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         is_upcoming = self.is_upcoming_date()
         is_start_date_after_end = self.is_start_date_after_end()
         # is_start_date_after_end it works
-        if is_upcoming or is_start_date_after_end:
-            pass
-        else:
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.login_usuario

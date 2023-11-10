@@ -136,7 +136,3 @@ AUTH_USER_MODEL = 'security.CustomUser'
 #     'security.customer_user_backend.CustomUserBackend', 'django.contrib.auth.backends.ModelBackend',]
 
 LOGIN_REDIRECT_URL = '/admin/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]

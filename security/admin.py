@@ -21,11 +21,6 @@ class CustomAdminSite(admin.AdminSite):
         return HttpResponseRedirect(change_password_url)
 
 
-admin_site = CustomAdminSite(name='customadmin')
-admin_site.register(Group)
-admin_site.register(User)
-
-
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = ['login_usuario', 'nombre',
@@ -79,7 +74,11 @@ class CustomUserAdmin(UserAdmin):
         return super().response_change(request, obj)
 
 
+admin_site = CustomAdminSite(name='customadmin')
 admin.site = admin_site
 
 # Registra el modelo de usuario personalizado con el administrador
+
+admin_site.register(Group)
+admin_site.register(User)
 admin.site.register(CustomUser, CustomUserAdmin)
