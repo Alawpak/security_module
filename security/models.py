@@ -65,9 +65,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # REQUIRED_FIELDS = ['nombre']
 
     def save(self, *args, **kwargs):
-        is_upcoming = self.is_upcoming_date()
-        is_start_date_after_end = self.is_start_date_after_end()
-        # is_start_date_after_end it works
         super().save(*args, **kwargs)
 
     def __str__(self):

@@ -41,37 +41,25 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('login_usuario', 'nombre')
     ordering = ('login_usuario',)
 
-    def response_add(self, request, obj, post_url_continue=None):
-        if "_save" in request.POST:
-            is_upcoming = obj.is_upcoming_date()
-            is_start_date_after_end = obj.is_start_date_after_end()
-            if is_upcoming:
-                messages.error(
-                    request, "La fecha del servidor es menor a la de inicio")
-                return HttpResponseRedirect('/admin/security/customuser')
-            if is_start_date_after_end:
-                messages.error(
-                    request, "La fecha de inicio no puede ser mayor a la de fin")
-                return HttpResponseRedirect('/admin/security/customuser')
-            else:
-                return super().response_change(request, obj)
-        return super().response_add(request, obj, post_url_continue)
+    def save_model(self, request, obj, form, change):
 
-    def response_change(self, request, obj):
-        if "_save" in request.POST:
-            is_upcoming = obj.is_upcoming_date()
-            is_start_date_after_end = obj.is_start_date_after_end()
-            if is_upcoming:
-                messages.error(
-                    request, "La fecha del servidor es menor a la de inicio")
-                return HttpResponseRedirect('/admin/security/customuser')
-            if is_start_date_after_end:
-                messages.error(
-                    request, "La fecha de inicio no puede ser mayor a la de fin")
-                return HttpResponseRedirect('/admin/security/customuser')
-            else:
-                return super().response_change(request, obj)
-        return super().response_change(request, obj)
+        is_upcoming = obj.is_upcoming_date()
+        is_start_date_after_end = obj.is_start_date_after_end()
+
+        if is_upcoming:
+            messages.error(
+                request, f"La fecha del servidor es menor a la de inicio para el usuario {obj.login_usuario}")
+            messages.set_level(request, messages.ERROR)
+            return HttpResponseRedirect(f'/admin/security/customuser/{obj.id}/change/')
+
+        if is_start_date_after_end:
+            messages.error(
+                request, f"La fecha de inicio no puede ser mayor a la de fin para el usuario {obj.login_usuario}")
+            messages.set_level(request, messages.ERROR)
+            return HttpResponseRedirect(f'/admin/security/customuser/{obj.id}/change/')
+
+        # Llamamos al método save_model del padre solo si ninguna de las condiciones anteriores es verdadera
+        super().save_model(request, obj, form, change)
 
 
 admin_site = CustomAdminSite(name='customadmin')
