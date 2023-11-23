@@ -1,10 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import PasswordChangeForm
 from .models import CustomUser
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import Group, User
 from django.urls import reverse
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm
 
 
 class CustomAdminSite(admin.AdminSite):
@@ -24,6 +25,8 @@ class CustomAdminSite(admin.AdminSite):
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     add_form = CustomUserCreationForm  # Utiliza el formulario personalizado
+    # Use the default password change form
+    form = CustomUserChangeForm
 
     list_display = ['login_usuario', 'nombre',
                     'fecha_inicio', 'fecha_fin', 'is_active']
