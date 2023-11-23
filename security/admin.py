@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
-from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import Group, User
 from django.urls import reverse
+from .forms import CustomUserCreationForm
 
 
 class CustomAdminSite(admin.AdminSite):
@@ -23,6 +23,8 @@ class CustomAdminSite(admin.AdminSite):
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
+    add_form = CustomUserCreationForm  # Utiliza el formulario personalizado
+
     list_display = ['login_usuario', 'nombre',
                     'fecha_inicio', 'fecha_fin', 'is_active']
     fieldsets = (
@@ -35,31 +37,11 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('nombre', 'login_usuario', 'fecha_inicio', 'fecha_fin', 'password1', 'password2', 'is_active'),
+            'fields': ('nombre', 'login_usuario', 'fecha_inicio', 'fecha_fin', 'password1', 'is_active'),
         }),
     )
     search_fields = ('login_usuario', 'nombre')
     ordering = ('login_usuario',)
-
-    def save_model(self, request, obj, form, change):
-
-        is_upcoming = obj.is_upcoming_date()
-        is_start_date_after_end = obj.is_start_date_after_end()
-
-        if is_upcoming:
-            messages.error(
-                request, f"La fecha del servidor es menor a la de inicio para el usuario {obj.login_usuario}")
-            messages.set_level(request, messages.ERROR)
-            return HttpResponseRedirect(f'/admin/security/customuser/{obj.id}/change/')
-
-        if is_start_date_after_end:
-            messages.error(
-                request, f"La fecha de inicio no puede ser mayor a la de fin para el usuario {obj.login_usuario}")
-            messages.set_level(request, messages.ERROR)
-            return HttpResponseRedirect(f'/admin/security/customuser/{obj.id}/change/')
-
-        # Llamamos al método save_model del padre solo si ninguna de las condiciones anteriores es verdadera
-        super().save_model(request, obj, form, change)
 
 
 admin_site = CustomAdminSite(name='customadmin')
