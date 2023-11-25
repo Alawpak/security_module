@@ -37,6 +37,15 @@ class CustomUserAdmin(UserAdmin):
         extra_context = extra_context or {}
         extra_context['all_users'] = all_users
 
+        #Si el profe quiere que se quede en la misma pagina
+        # if request.method == 'POST':
+        #     response = super().add_view(request, form_url, extra_context)
+        #     # Redirige a la misma página
+        #     response['Location'] = request.get_full_path()
+        #     return response
+
+        return super().add_view(request, form_url, extra_context)
+
     list_display = ['login_usuario', 'nombre',
                     'fecha_inicio', 'fecha_fin', 'is_active']
     fieldsets = (
