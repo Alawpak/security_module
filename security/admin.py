@@ -25,8 +25,17 @@ class CustomAdminSite(admin.AdminSite):
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     add_form = CustomUserCreationForm  # Utiliza el formulario personalizado
+    add_form_template = 'admin/add_form.html'
     # Use the default password change form
     form = CustomUserChangeForm
+
+    def add_view(self, request, form_url='', extra_context=None):
+        # Obtén todos los usuarios
+        all_users = CustomUser.objects.all()
+
+        # Pasa los usuarios al contexto
+        extra_context = extra_context or {}
+        extra_context['all_users'] = all_users
 
     list_display = ['login_usuario', 'nombre',
                     'fecha_inicio', 'fecha_fin', 'is_active']

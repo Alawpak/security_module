@@ -29,6 +29,7 @@ class PasswordInputWithToggle(forms.PasswordInput):
 
 
 class CustomUserCreationForm(UserCreationForm):
+    template_name = 'admin/add_form.html'
     password1 = forms.CharField(
         label="Contraseña", widget=PasswordInputWithToggle(attrs={'type': 'password'}))
 
