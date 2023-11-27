@@ -1,39 +1,37 @@
-{% extends "admin/change_form.html" %} 
-{% block form_top %}
-<p>add</p>
-{% endblock %}
+{% extends "admin/change_form.html" %} {% block form_top %}
+<img
+  src="https://cdn-icons-png.flaticon.com/512/921/921359.png"
+  style="width: 100px"
+/>
+{% endblock %} {% block content %} {{ block.super }}
+<!-- Agrega aquí enlaces adicionales al formulario de cambio -->
 
-
-{% block content %}
-  {{ block.super }}
-  <!-- Agrega aquí enlaces adicionales al formulario de cambio -->
- 
-  <table>
-    <thead>
-      <tr>
-        <th>Login Usuario</th>
-        <th>Nombre</th>
-        <th>Fecha Inicio</th>
-        <th>Fecha Fin</th>
-        <th>Activo</th>
-        <!-- Agrega más columnas según tu modelo CustomUser -->
-      </tr>
-    </thead>
-    <tbody>
-      {% for user in all_users %}
-      <tr>
-        <td>
-          <a href="{% url 'admin:security_customuser_change' user.id %}"
-            >{{ user.login_usuario }}</a
-          >
-        </td>
-        <td>{{ user.nombre }}</td>
-        <td>{{ user.fecha_inicio }}</td>
-        <td>{{ user.fecha_fin }}</td>
-        <td>{{ user.is_active }}</td>
-        <!-- Agrega más celdas según tu modelo CustomUser -->
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<table>
+  <thead>
+    <tr>
+      <th>Login Usuario</th>
+      <th>Nombre</th>
+      <th>Fecha Inicio</th>
+      <th>Fecha Fin</th>
+      <th>Activo</th>
+      <!-- Agrega más columnas según tu modelo CustomUser -->
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in all_users %}
+    <tr>
+      <td>
+        <a href="{% url 'admin:security_customuser_change' user.id %}"
+          >{{ user.login_usuario }}</a
+        >
+      </td>
+      <td>{{ user.nombre }}</td>
+      <td>{{ user.fecha_inicio }}</td>
+      <td>{{ user.fecha_fin }}</td>
+      <td>{{ user.is_active }}</td>
+      <!-- Agrega más celdas según tu modelo CustomUser -->
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

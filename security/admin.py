@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import PasswordChangeForm
+from django.http.request import HttpRequest
 from .models import CustomUser
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import Group, User
 from django.urls import reverse
 from .forms import CustomUserCreationForm, CustomUserChangeForm
@@ -37,12 +38,12 @@ class CustomUserAdmin(UserAdmin):
         extra_context = extra_context or {}
         extra_context['all_users'] = all_users
 
-        #Si el profe quiere que se quede en la misma pagina
-        # if request.method == 'POST':
-        #     response = super().add_view(request, form_url, extra_context)
-        #     # Redirige a la misma página
-        #     response['Location'] = request.get_full_path()
-        #     return response
+        # Si el profe quiere que se quede en la misma pagina
+        if request.method == 'POST':
+            response = super().add_view(request, form_url, extra_context)
+            # Redirige a la misma página
+            response['Location'] = request.get_full_path()
+            return response
 
         return super().add_view(request, form_url, extra_context)
 
