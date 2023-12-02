@@ -37,8 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'rest_framework',
     'security'
 ]
+
+CROSS_ORIGIN_ALLOW_ALL = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,12 +82,12 @@ WSGI_APPLICATION = 'security_module.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': "security",
-        "USER": "root",
-        "PASSWORD": "",
-        "HOST": "localhost",
-        "PORT": "3307"
+        'ENGINE': 'djongo',
+        'CLIENT': {
+            'host': 'localhost',
+            'port': 27017,
+        },
+        'NAME': 'security',
     }
 }
 
